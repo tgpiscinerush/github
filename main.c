@@ -6,7 +6,7 @@
 /*   By: chtang <chtang@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 22:22:09 by chtang            #+#    #+#             */
-/*   Updated: 2024/01/10 03:11:40 by chtang           ###   ########.fr       */
+/*   Updated: 2024/01/10 03:21:36 by chtang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,18 @@ int	main(int ac, char **av, char **env)
 {
 	char	***cmds;
 	int		fd[2];
+	int		flag;
 
 	argc_check(ac);
+	flag = 0;
 	fd[0] = open(av[1], O_RDONLY);
 	fd[1] = open(av[ac - 1], O_CREAT | O_TRUNC | O_WRONLY, 0644);
 	if (access(av[1], R_OK) == FT_PERROR)
 	{
 		print_error(av[1], strerror(errno));
-		av[2][0] = -1;
+		flag = 1;
 	}
-	cmds = parcing(&av[2], env);
+	cmds = parcing(&av[2], env, flag);
 	do_pipe(cmds, env, fd);
 	close(fd[0]);
 	close(fd[1]);
