@@ -6,7 +6,7 @@
 #    By: chtang <chtang@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/20 18:21:29 by chtang            #+#    #+#              #
-#    Updated: 2024/01/10 02:02:53 by chtang           ###   ########.fr        #
+#    Updated: 2024/01/10 04:11:32 by chtang           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,6 @@ CFLAG = -Wall -Wextra -Werror
 CC = cc
 RM = rm -rf
 SRCS = cmds.c pipe.c main.c errors.c cmds_ult.c
-
 OBJS = ${SRCS:%.c=%.o}
 
 all :
@@ -46,4 +45,4 @@ fclean : rmobjs
 
 re : fclean all
 
-.PHONY : re clean all fclean rmobjs bouns
+.PHONY : re clean all fclean rmobjs

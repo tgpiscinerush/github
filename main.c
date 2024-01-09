@@ -6,7 +6,7 @@
 /*   By: chtang <chtang@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 22:22:09 by chtang            #+#    #+#             */
-/*   Updated: 2024/01/10 04:03:35 by chtang           ###   ########.fr       */
+/*   Updated: 2024/01/10 04:06:38 by chtang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	main(int argc, char **argv, char **env)
 		flag[0] = 1;
 	}
 	cmds = parcing(&argv[2], env, flag);
-	do_pipe(cmds, env, fd);
+	start_pipe(cmds, env, fd);
 	close(fd[0]);
 	close(fd[1]);
 	return (0);

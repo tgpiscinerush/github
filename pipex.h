@@ -6,7 +6,7 @@
 /*   By: chtang <chtang@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 22:22:47 by chtang            #+#    #+#             */
-/*   Updated: 2024/01/10 03:36:06 by chtang           ###   ########.fr       */
+/*   Updated: 2024/01/10 04:06:34 by chtang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,6 @@ char	*path_join(char const *s1, char const *s2);
 void	exit_with_fail(char *s);
 int		not_a_path(char *str);
 char	***parcing(char **av, char **env, int *flag);
-void	do_pipe(char ***cmds, char **env, int *in_out_file);
+void	start_pipe(char ***cmds, char **env, int *in_out_file);
 
 #endif

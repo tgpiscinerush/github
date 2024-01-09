@@ -6,13 +6,13 @@
 /*   By: chtang <chtang@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 01:33:57 by chtang            #+#    #+#             */
-/*   Updated: 2024/01/10 03:56:49 by chtang           ###   ########.fr       */
+/*   Updated: 2024/01/10 04:08:27 by chtang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	close_prev_pipe(int *pip, int valid)
+void	close_pipe(int *pip, int valid)
 {
 	if (valid)
 	{
@@ -25,11 +25,11 @@ void	switch_pipes(int i, int *pipe1, int *pipe2)
 {
 	if (i)
 	{
-		close_prev_pipe(pipe1, i > 1);
+		close_pipe(pipe1, i > 1);
 		pipe1[0] = pipe2[0];
 		pipe1[1] = pipe2[1];
 	}
-	if (i + 1 != 2 && pipe(pipe2) == FT_PERROR)
+	if (i != 1 && pipe(pipe2) == FT_PERROR)
 		exit_with_fail("pipe");
 }
 
@@ -45,7 +45,7 @@ int	create_process(int *pipe2, int i, int *file)
 	return (pid);
 }
 
-void	redirection_fd(int *pipe1, int *pipe2)
+void	pointing_fd(int *pipe1, int *pipe2)
 {
 	if (pipe1[0] == FT_PERROR)
 		exit(EXIT_FAILURE);
@@ -53,11 +53,11 @@ void	redirection_fd(int *pipe1, int *pipe2)
 		exit_with_fail("dup");
 	if (dup2(pipe2[1], STDOUT_FILENO) == FT_PERROR)
 		exit_with_fail("dup");
-	close_prev_pipe(pipe1, FT_SUCCESS);
-	close_prev_pipe(pipe2, FT_SUCCESS);
+	close_pipe(pipe1, FT_SUCCESS);
+	close_pipe(pipe2, FT_SUCCESS);
 }
 
-void	do_pipe(char ***cmds, char **env, int *file)
+void	start_pipe(char ***cmds, char **env, int *file)
 {
 	int	pipe1[2];
 	int	pipe2[2];
@@ -72,14 +72,14 @@ void	do_pipe(char ***cmds, char **env, int *file)
 		pid = create_process(pipe2, i, file);
 		if (pid == 0)
 		{
-			redirection_fd(pipe1, pipe2);
+			pointing_fd(pipe1, pipe2);
 			if (execve(cmds[i][0], cmds[i], env) == FT_PERROR && cmds[i][0])
 				exit_with_fail(cmds[i][0]);
 			exit(EXIT_FAILURE);
 		}
 		i++;
 	}
-	close_prev_pipe(pipe1, FT_SUCCESS);
+	close_pipe(pipe1, FT_SUCCESS);
 	while (wait(NULL) != FT_PERROR)
 		;
 }
