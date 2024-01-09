@@ -1,0 +1,84 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chtang <chtang@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/27 01:33:57 by chtang            #+#    #+#             */
+/*   Updated: 2024/01/10 01:04:53 by chtang           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+void	close_prev_pipe(int *pip, int valid)
+{
+	if (valid)
+	{
+		close(pip[0]);
+		close(pip[1]);
+	}
+}
+
+void	switch_pipes(int i, int n_pipes, int *pipe1, int *pipe2)
+{
+	if (i)
+	{
+		close_prev_pipe(pipe1, i > 1);
+		pipe1[0] = pipe2[0];
+		pipe1[1] = pipe2[1];
+	}
+	if (i + 1 != n_pipes && pipe(pipe2) == FT_PERROR)
+		exit_with_fail("pipe");
+}
+
+int	fork_from_the_parent(int *pipe2, int i, int n_pipes, int *in_out_file)
+{
+	int	pid;
+
+	if (i + 1 == n_pipes)
+		pipe2[1] = in_out_file[1];
+	pid = fork();
+	if (pid == FT_PERROR)
+		exit_with_fail("fork");
+	return (pid);
+}
+
+void	redirection_fd(int *pipe1, int *pipe2)
+{
+	if (pipe1[0] == FT_PERROR)
+		exit(EXIT_FAILURE);
+	if (dup2(pipe1[0], STDIN_FILENO) == FT_PERROR)
+		exit_with_fail("dup");
+	if (dup2(pipe2[1], STDOUT_FILENO) == FT_PERROR)
+		exit_with_fail("dup");
+	close_prev_pipe(pipe1, FT_SUCCESS);
+	close_prev_pipe(pipe2, FT_SUCCESS);
+}
+
+void	do_pipe(char ***cmds, char **env, int n_pipes, int *in_out_file)
+{
+	int	pipe1[2];
+	int	pipe2[2];
+	int	pid;
+	int	i;
+
+	i = -1;
+	pipe1[0] = in_out_file[0];
+	while (++i < n_pipes)
+	{
+		switch_pipes(i, n_pipes, pipe1, pipe2);
+		pid = fork_from_the_parent(pipe2, i, n_pipes, in_out_file);
+		if (pid == 0)
+		{
+			redirection_fd(pipe1, pipe2);
+			if (execve(cmds[i][0], cmds[i], env) == FT_PERROR && cmds[i][0])
+				exit_with_fail(cmds[i][0]);
+			exit(EXIT_FAILURE);
+		}
+	}
+	close_prev_pipe(pipe1, FT_SUCCESS);
+	while (wait(NULL) != FT_PERROR)
+		;
+}
