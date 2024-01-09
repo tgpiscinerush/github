@@ -6,7 +6,7 @@
 /*   By: chtang <chtang@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 01:33:57 by chtang            #+#    #+#             */
-/*   Updated: 2024/01/10 04:17:35 by chtang           ###   ########.fr       */
+/*   Updated: 2024/01/10 04:20:28 by chtang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	switch_pipes(int i, int *pipe1, int *pipe2)
 		pipe1[0] = pipe2[0];
 		pipe1[1] = pipe2[1];
 	}
-	if (i + 1 != 2 && pipe(pipe2) == FT_PERROR)
+	if (i != 1 && pipe(pipe2) == FT_PERROR)
 		exit_with_fail("pipe");
 }
 
