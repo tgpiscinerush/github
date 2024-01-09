@@ -6,7 +6,7 @@
 /*   By: chtang <chtang@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 00:52:04 by chtang            #+#    #+#             */
-/*   Updated: 2024/01/10 03:24:30 by chtang           ###   ########.fr       */
+/*   Updated: 2024/01/10 03:30:10 by chtang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,12 @@ void	init_cmds(char ***cmds, char **av, char **paths, int flag)
 	char	*join;
 
 	i = -1;
+	(void)flag;
 	while (++i < 2)
 	{
 		cmds[i] = ft_split(av[i], ' ');
 		j = -1;
-		while (paths[++j] && cmds[i][0] && flag != 1 \
+		while (paths[++j] && cmds[i][0] && cmds[i][0][0] != -1 \
 			&& !ft_strnstr(cmds[i][0], "/", ft_strlen(cmds[i][0])))
 		{
 			join = path_join(paths[j], cmds[i][0]);

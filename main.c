@@ -6,7 +6,7 @@
 /*   By: chtang <chtang@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 22:22:09 by chtang            #+#    #+#             */
-/*   Updated: 2024/01/10 03:21:36 by chtang           ###   ########.fr       */
+/*   Updated: 2024/01/10 03:29:35 by chtang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	main(int ac, char **av, char **env)
 	if (access(av[1], R_OK) == FT_PERROR)
 	{
 		print_error(av[1], strerror(errno));
-		flag = 1;
+		av[2][0] = -1;
 	}
 	cmds = parcing(&av[2], env, flag);
 	do_pipe(cmds, env, fd);
