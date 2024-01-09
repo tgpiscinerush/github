@@ -6,7 +6,7 @@
 /*   By: chtang <chtang@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 00:52:04 by chtang            #+#    #+#             */
-/*   Updated: 2024/01/10 03:22:44 by chtang           ###   ########.fr       */
+/*   Updated: 2024/01/10 03:24:30 by chtang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,16 @@ int	found_path(char **cmds, char *join)
 	return (FT_FAIL);
 }
 
-int	assessable(char ***cmds, char **paths)
-{
-	int	idx;
+// int	assessable(char ***cmds, char **paths)
+// {
+// 	int	idx;
 
-	idx = 0;
-	while (idx < 2)
-	{
+// 	idx = 0;
+// 	while (idx < 2)
+// 	{
 
-	}
-}
+// 	}
+// }
 
 void	init_cmds(char ***cmds, char **av, char **paths, int flag)
 {
@@ -101,7 +101,7 @@ char	***parcing(char **av, char **env, int flag)
 		exit(EXIT_FAILURE);
 	}
 	cmds[2] = NULL;
-	init_cmds(cmds, av, paths);
+	init_cmds(cmds, av, paths, flag);
 	s = paths;
 	while (*s)
 		free(*(s++));
