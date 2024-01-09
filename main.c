@@ -6,7 +6,7 @@
 /*   By: chtang <chtang@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 22:22:09 by chtang            #+#    #+#             */
-/*   Updated: 2024/01/10 01:08:29 by chtang           ###   ########.fr       */
+/*   Updated: 2024/01/10 03:11:40 by chtang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ int	main(int ac, char **av, char **env)
 		print_error(av[1], strerror(errno));
 		av[2][0] = -1;
 	}
-	cmds = parcing(2, &av[2], env);
-	do_pipe(cmds, env, 2, fd);
+	cmds = parcing(&av[2], env);
+	do_pipe(cmds, env, fd);
 	close(fd[0]);
 	close(fd[1]);
 	return (0);

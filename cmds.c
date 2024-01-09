@@ -6,7 +6,7 @@
 /*   By: chtang <chtang@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 00:52:04 by chtang            #+#    #+#             */
-/*   Updated: 2024/01/10 01:56:20 by chtang           ###   ########.fr       */
+/*   Updated: 2024/01/10 03:11:54 by chtang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,14 @@ int	found_path(char **cmds, char *join)
 	return (FT_FAIL);
 }
 
-void	init_cmds(char ***cmds, char **av, int nb_cmd, char **paths)
+void	init_cmds(char ***cmds, char **av, char **paths)
 {
 	int		i;
 	int		j;
 	char	*join;
 
 	i = -1;
-	while (++i < nb_cmd)
+	while (++i < 2)
 	{
 		cmds[i] = ft_split(av[i], ' ');
 		j = -1;
@@ -76,21 +76,21 @@ void	init_cmds(char ***cmds, char **av, int nb_cmd, char **paths)
 	}
 }
 
-char	***parcing(int nb_cmd, char **av, char **env)
+char	***parcing(char **av, char **env)
 {
 	char	**s;
 	char	**paths;
 	char	***cmds;
 
 	paths = find_path(env);
-	cmds = (char ***)malloc(sizeof(char **) * (nb_cmd + 1));
+	cmds = (char ***)malloc(sizeof(char **) * (2 + 1));
 	if (!cmds)
 	{
 		write(2, "Error : Malloc() : parcing failed\n", 35);
 		exit(EXIT_FAILURE);
 	}
-	cmds[nb_cmd] = NULL;
-	init_cmds(cmds, av, nb_cmd, paths);
+	cmds[2] = NULL;
+	init_cmds(cmds, av, paths);
 	s = paths;
 	while (*s)
 		free(*(s++));

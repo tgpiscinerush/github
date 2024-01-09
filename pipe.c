@@ -6,7 +6,7 @@
 /*   By: chtang <chtang@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 01:33:57 by chtang            #+#    #+#             */
-/*   Updated: 2024/01/10 01:04:53 by chtang           ###   ########.fr       */
+/*   Updated: 2024/01/10 03:11:32 by chtang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	close_prev_pipe(int *pip, int valid)
 	}
 }
 
-void	switch_pipes(int i, int n_pipes, int *pipe1, int *pipe2)
+void	switch_pipes(int i, int *pipe1, int *pipe2)
 {
 	if (i)
 	{
@@ -29,15 +29,15 @@ void	switch_pipes(int i, int n_pipes, int *pipe1, int *pipe2)
 		pipe1[0] = pipe2[0];
 		pipe1[1] = pipe2[1];
 	}
-	if (i + 1 != n_pipes && pipe(pipe2) == FT_PERROR)
+	if (i + 1 != 2 && pipe(pipe2) == FT_PERROR)
 		exit_with_fail("pipe");
 }
 
-int	fork_from_the_parent(int *pipe2, int i, int n_pipes, int *in_out_file)
+int	fork_from_the_parent(int *pipe2, int i, int *in_out_file)
 {
 	int	pid;
 
-	if (i + 1 == n_pipes)
+	if (i + 1 == 2)
 		pipe2[1] = in_out_file[1];
 	pid = fork();
 	if (pid == FT_PERROR)
@@ -57,7 +57,7 @@ void	redirection_fd(int *pipe1, int *pipe2)
 	close_prev_pipe(pipe2, FT_SUCCESS);
 }
 
-void	do_pipe(char ***cmds, char **env, int n_pipes, int *in_out_file)
+void	do_pipe(char ***cmds, char **env, int *in_out_file)
 {
 	int	pipe1[2];
 	int	pipe2[2];
@@ -66,10 +66,10 @@ void	do_pipe(char ***cmds, char **env, int n_pipes, int *in_out_file)
 
 	i = -1;
 	pipe1[0] = in_out_file[0];
-	while (++i < n_pipes)
+	while (++i < 2)
 	{
-		switch_pipes(i, n_pipes, pipe1, pipe2);
-		pid = fork_from_the_parent(pipe2, i, n_pipes, in_out_file);
+		switch_pipes(i, pipe1, pipe2);
+		pid = fork_from_the_parent(pipe2, i, in_out_file);
 		if (pid == 0)
 		{
 			redirection_fd(pipe1, pipe2);
