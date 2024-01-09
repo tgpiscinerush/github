@@ -6,7 +6,7 @@
 /*   By: chtang <chtang@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 00:52:04 by chtang            #+#    #+#             */
-/*   Updated: 2024/01/10 03:49:03 by chtang           ###   ########.fr       */
+/*   Updated: 2024/01/10 04:01:37 by chtang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	**find_path(char **env)
 			paths = ft_split(&((*env)[5]), ':');
 			if (!paths)
 			{
-				write(2, "Error : Unexpected error : split failes\n", 41);
+				ft_putendl_fd("ERROR", 2);
 				exit(EXIT_FAILURE);
 			}
 			return (paths);
@@ -64,7 +64,7 @@ int	test_access(char **cmds, char **paths, int flag)
 	return (j);
 }
 
-void	init_cmds(char ***cmds, char **av, char **paths, int *flag)
+void	init_cmds(char ***cmds, char **argv, char **paths, int *flag)
 {
 	int		i;
 	int		j;
@@ -72,16 +72,8 @@ void	init_cmds(char ***cmds, char **av, char **paths, int *flag)
 	i = 0;
 	while (i < 2)
 	{
-		cmds[i] = ft_split(av[i], ' ');
+		cmds[i] = ft_split(argv[i], ' ');
 		j = test_access(cmds[i], paths, flag[i]);
-		// while (paths[++j] && cmds[i][0] && flag[i] != 1
-		// 	&& !ft_strnstr(cmds[i][0], "/", ft_strlen(cmds[i][0])))
-		// {
-		// 	join = path_join(paths[j], cmds[i][0]);
-		// 	if (found_path(cmds[i], join))
-		// 		break ;
-		// 	free(join);
-		// }
 		if (!cmds[i][0] || !paths[j])
 			print_error(cmds[i][0], "command not found");
 		if (!paths[j])
@@ -94,7 +86,7 @@ void	init_cmds(char ***cmds, char **av, char **paths, int *flag)
 	}
 }
 
-char	***parcing(char **av, char **env, int *flag)
+char	***parcing(char **argv, char **env, int *flag)
 {
 	char	**s;
 	char	**paths;
@@ -104,11 +96,11 @@ char	***parcing(char **av, char **env, int *flag)
 	cmds = (char ***)malloc(sizeof(char **) * (2 + 1));
 	if (!cmds)
 	{
-		write(2, "Error : Malloc() : parcing failed\n", 35);
+		ft_putendl_fd("ERROR", 2);
 		exit(EXIT_FAILURE);
 	}
 	cmds[2] = NULL;
-	init_cmds(cmds, av, paths, flag);
+	init_cmds(cmds, argv, paths, flag);
 	s = paths;
 	while (*s)
 		free(*(s++));

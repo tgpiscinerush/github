@@ -6,7 +6,7 @@
 /*   By: chtang <chtang@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 01:33:57 by chtang            #+#    #+#             */
-/*   Updated: 2024/01/10 03:11:32 by chtang           ###   ########.fr       */
+/*   Updated: 2024/01/10 03:56:49 by chtang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,12 @@ void	switch_pipes(int i, int *pipe1, int *pipe2)
 		exit_with_fail("pipe");
 }
 
-int	fork_from_the_parent(int *pipe2, int i, int *in_out_file)
+int	create_process(int *pipe2, int i, int *file)
 {
 	int	pid;
 
-	if (i + 1 == 2)
-		pipe2[1] = in_out_file[1];
+	if (i == 1)
+		pipe2[1] = file[1];
 	pid = fork();
 	if (pid == FT_PERROR)
 		exit_with_fail("fork");
@@ -57,19 +57,19 @@ void	redirection_fd(int *pipe1, int *pipe2)
 	close_prev_pipe(pipe2, FT_SUCCESS);
 }
 
-void	do_pipe(char ***cmds, char **env, int *in_out_file)
+void	do_pipe(char ***cmds, char **env, int *file)
 {
 	int	pipe1[2];
 	int	pipe2[2];
 	int	pid;
 	int	i;
 
-	i = -1;
-	pipe1[0] = in_out_file[0];
-	while (++i < 2)
+	i = 0;
+	pipe1[0] = file[0];
+	while (i < 2)
 	{
 		switch_pipes(i, pipe1, pipe2);
-		pid = fork_from_the_parent(pipe2, i, in_out_file);
+		pid = create_process(pipe2, i, file);
 		if (pid == 0)
 		{
 			redirection_fd(pipe1, pipe2);
@@ -77,6 +77,7 @@ void	do_pipe(char ***cmds, char **env, int *in_out_file)
 				exit_with_fail(cmds[i][0]);
 			exit(EXIT_FAILURE);
 		}
+		i++;
 	}
 	close_prev_pipe(pipe1, FT_SUCCESS);
 	while (wait(NULL) != FT_PERROR)
