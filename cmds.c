@@ -6,7 +6,7 @@
 /*   By: chtang <chtang@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 00:52:04 by chtang            #+#    #+#             */
-/*   Updated: 2024/01/10 03:37:10 by chtang           ###   ########.fr       */
+/*   Updated: 2024/01/10 03:49:03 by chtang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,36 +46,42 @@ int	found_path(char **cmds, char *join)
 	return (FT_FAIL);
 }
 
-// int	assessable(char ***cmds, char **paths)
-// {
-// 	int	idx;
+int	test_access(char **cmds, char **paths, int flag)
+{
+	char	*join;
+	int		j;
 
-// 	idx = 0;
-// 	while (idx < 2)
-// 	{
-
-// 	}
-// }
+	j = 0;
+	while (paths[j] && cmds[0] && flag != 1 \
+			&& !ft_strnstr(cmds[0], "/", ft_strlen(cmds[0])))
+	{
+		join = path_join(paths[j], cmds[0]);
+		if (found_path(cmds, join))
+			return (j);
+		free(join);
+		j++;
+	}
+	return (j);
+}
 
 void	init_cmds(char ***cmds, char **av, char **paths, int *flag)
 {
 	int		i;
 	int		j;
-	char	*join;
 
-	i = -1;
-	while (++i < 2)
+	i = 0;
+	while (i < 2)
 	{
 		cmds[i] = ft_split(av[i], ' ');
-		j = -1;
-		while (paths[++j] && cmds[i][0] && flag[i] != 1 \
-			&& !ft_strnstr(cmds[i][0], "/", ft_strlen(cmds[i][0])))
-		{
-			join = path_join(paths[j], cmds[i][0]);
-			if (found_path(cmds[i], join))
-				break ;
-			free(join);
-		}
+		j = test_access(cmds[i], paths, flag[i]);
+		// while (paths[++j] && cmds[i][0] && flag[i] != 1
+		// 	&& !ft_strnstr(cmds[i][0], "/", ft_strlen(cmds[i][0])))
+		// {
+		// 	join = path_join(paths[j], cmds[i][0]);
+		// 	if (found_path(cmds[i], join))
+		// 		break ;
+		// 	free(join);
+		// }
 		if (!cmds[i][0] || !paths[j])
 			print_error(cmds[i][0], "command not found");
 		if (!paths[j])
@@ -84,6 +90,7 @@ void	init_cmds(char ***cmds, char **av, char **paths, int *flag)
 			cmds[i][1] = cmds[i][0];
 			cmds[i][0] = NULL;
 		}
+		i++;
 	}
 }
 
